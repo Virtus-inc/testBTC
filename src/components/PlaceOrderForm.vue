@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import NumberInput from "@/shared/components/NumberInput/NumberInput.vue";
-import TakeProfit from "@/components/TakeProfit.vue";
+import Accordion from "@/components/Accordion.vue";
 import Button from "@/shared/components/Button/Button.vue";
 import { BASE_CURRENCY, QUOTE_CURRENCY } from "@/constants.ts";
 import { store } from "@/store";
 import PlaceOrderTypeSwitch from "@/components/PlaceOrderTypeSwitch.vue";
 import InfoIcon from "@/shared/icons/InfoIcon/InfoIcon.vue";
+import { validateForm } from "@/utils/formValidation";
+
+interface IErrorTargetProfit {
+  profit: number;
+  targetPrice: number;
+  amount: number;
+}
 
 const submitButtonText = computed(() => {
   return store.activeOrderSide === "buy"
@@ -14,7 +21,15 @@ const submitButtonText = computed(() => {
     : `Sell ${QUOTE_CURRENCY}`;
 });
 
+const hasErrors = (): boolean => {
+  return store.errorsTargetProfit.some(
+    (error: IErrorTargetProfit) =>
+      error.profit || error.targetPrice || error.amount,
+  );
+};
+
 const submit = () => {
+  validateForm();
   console.log("submit");
 };
 </script>
@@ -59,10 +74,16 @@ const submit = () => {
       />
     </div>
 
-    <TakeProfit />
+    <Accordion />
 
     <div>
-      <Button type="submit" variant="accent" :full-width="true">
+      <Button
+        type="submit"
+        variant="accent"
+        :full-width="true"
+        :disabled="hasErrors()"
+        @click.prevent
+      >
         {{ submitButtonText }}
       </Button>
     </div>

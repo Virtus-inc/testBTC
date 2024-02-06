@@ -1,23 +1,43 @@
-import {reactive} from 'vue'
-import {OrderSide} from "@/model.ts";
+import { reactive } from "vue";
+import type { OrderSide } from "@/model.ts";
 
-export const store = reactive({
-    activeOrderSide: 'buy',
-    price: 2,
-    amount: 0,
-    total(): number {
-        return this.price * this.amount;
-    },
-    setOrderSide(side: OrderSide): void {
-        this.activeOrderSide = side;
-    },
-    setPrice(price: number): void {
-        this.price = price;
-    },
-    setAmount(amount: number): void {
-        this.amount = amount;
-    },
-    setTotal(total: number): void  {
-        this.amount = this.price > 0 ? total / this.price : 0;
-    }
-})
+interface IErrorTargetProfit {
+  profit: number;
+  targetPrice: number;
+  amount: number;
+  _amount: number;
+}
+
+interface IStore {
+  activeOrderSide: OrderSide;
+  price: number;
+  amount: number;
+  errorsTargetProfit: IErrorTargetProfit[];
+  total: () => number;
+  setOrderSide: (side: OrderSide) => void;
+  setPrice: (price: number) => void;
+  setAmount: (amount: number) => void;
+  setTotal: (total: number) => void;
+}
+
+export const store = reactive<IStore>({
+  activeOrderSide: "buy",
+  price: 10000,
+  amount: 0.5,
+  errorsTargetProfit: [],
+  total(): number {
+    return this.price * this.amount;
+  },
+  setOrderSide(side: OrderSide) {
+    this.activeOrderSide = side;
+  },
+  setPrice(price: number) {
+    this.price = price;
+  },
+  setAmount(amount: number) {
+    this.amount = amount;
+  },
+  setTotal(total: number) {
+    this.amount = this.price > 0 ? total / this.price : 0;
+  },
+});

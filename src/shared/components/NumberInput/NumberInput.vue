@@ -41,6 +41,8 @@ const handleInput = (event: Event) => {
       class="block w-full border-0 bg-base-100 p-0 text-base-950 placeholder:text-gray-400 focus:bg-base-200 focus:outline-none group-hover:bg-base-200"
       v-bind="$attrs"
       :value="modelValue"
+      step="0.1"
+      min="0.1"
       @input="handleInput($event)"
     />
   </div>
